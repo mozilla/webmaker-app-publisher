@@ -18,7 +18,7 @@ middleware.errorHandler = function (err, req, res, next) {
 // CORS
 var allowedDomains = habitat.get('ALLOWED_DOMAINS').split(/[\s,]+/);
 middleware.cors = function cors(req, res, next) {
-    if (allowedDomains === '*' || allowedDomains.indexOf(req.headers.origin) > -1) {
+    if (allowedDomains[0] === '*' || allowedDomains.indexOf(req.headers.origin) > -1) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'POST');
         res.header('Access-Control-Allow-Headers', 'Content-Type');
