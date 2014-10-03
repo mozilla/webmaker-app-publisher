@@ -25,17 +25,20 @@ module.exports = function (req, res, next) {
 
     if (!req.session || !req.session.user) return next(errorUtil(401, 'No user session found'));
     var username = req.session.user.username;
-    var appIndex = req.body.app;
+    var appId = req.body.id;
 
     if (!username) return next(errorUtil(401, 'No valid user session found'));
-    if (!appIndex) return next(errorUtil(400, 'No app index in request body. See docs at ' + docsUrl));
+    if (!appId) return next(errorUtil(400, 'No app id in request body. See docs at ' + docsUrl));
 
     makedrive.getUserJSON(username, function (err, data) {
         if (err) return next(err);
 
-        var json = data.apps[appIndex];
+        var json;
+        for (var i in data.apps) {
+            if (data.apps[i].id === appId) json = data.apps[i];
+        }
 
-        if (!json) return next(errorUtil(404, 'App not found for index: ' + appIndex));
+        if (!json) return next(errorUtil(404, 'App not found for id: ' + appId));
 
         var dir = req.query.username + '/' + json.id;
 
