@@ -13,7 +13,7 @@ var s3 = new AWS.S3({
     accessKeyId: habitat.get('ACCESS_KEY_ID'),
     secretAccessKey: habitat.get('SECRET_ACCESS_KEY'),
     params: {
-        Bucket: 'webmaker-app-publisher'
+        Bucket: habitat.get('BUCKET')
     }
 });
 var s3Util = new S3Util(s3);
