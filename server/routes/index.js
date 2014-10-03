@@ -6,7 +6,7 @@ module.exports = function (auth) {
 
     router.get('/healthcheck', require('./healthcheck'));
     router.post('/publish', middleware.cors, require('./publish'));
-    router.options('/publish', middleware.cors);
+    router.options('*', middleware.cors);
 
     return router;
 };

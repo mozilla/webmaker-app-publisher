@@ -37,9 +37,10 @@ module.exports = function () {
         app.use(morgan('dev'));
     }
 
-    app.use(bodyParser.json());
     app.use(auth.cookieParser());
     app.use(auth.cookieSession());
+
+    app.use(bodyParser.json());
 
     app.use(routes);
     app.use(middleware.errorHandler);

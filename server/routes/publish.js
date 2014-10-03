@@ -40,7 +40,7 @@ module.exports = function (req, res, next) {
 
         if (!json) return next(errorUtil(404, 'App not found for id: ' + appId));
 
-        var dir = req.query.username + '/' + json.id;
+        var dir = username + '/' + json.id;
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';

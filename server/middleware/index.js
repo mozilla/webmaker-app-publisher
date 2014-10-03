@@ -9,7 +9,7 @@ middleware.errorHandler = function (err, req, res, next) {
     if (err) {
         console.error(err.stack);
         message = err.message || 'There was an internal server error.';
-        code = err.code || 500
+        code = +err.code || 500
     }
 
     res.status(code).send(message);
@@ -21,10 +21,17 @@ middleware.cors = function cors(req, res, next) {
     if (allowedDomains[0] === '*' || allowedDomains.indexOf(req.headers.origin) > -1) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'POST');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
+        res.header('Access-Control-Expose-Headers', 'Content-Type');
         res.header('Access-Control-Allow-Credentials', true);
     }
-    next();
+    // intercept OPTIONS method
+    if (req.method === 'OPTIONS') {
+        res.send(200);
+    }
+    else {
+        next();
+    }
 };
 
 module.exports = middleware;
