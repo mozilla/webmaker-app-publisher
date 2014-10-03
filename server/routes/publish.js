@@ -64,7 +64,11 @@ module.exports = function (req, res, next) {
         // Do it!
         async.parallel(queue, function (err, results) {
             if (err) return next(err);
-            res.send(results);
+            // Send the url
+            res.send({
+                url: habitat.get('PUBLISH_URL') + '/' + dir,
+                result: results
+            });
         });
     });
 
