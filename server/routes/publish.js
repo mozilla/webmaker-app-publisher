@@ -28,7 +28,7 @@ module.exports = function (req, res, next) {
     var appId = req.body.id;
 
     if (!username) return next(errorUtil(401, 'No valid user session found'));
-    if (!appId) return next(errorUtil(400, 'No app id in request body. See docs at ' + docsUrl));
+    if (!appId) return next(errorUtil(400, 'No id in request body. See docs at ' + docsUrl));
 
     makedrive.getUserJSON(username, function (err, data) {
         if (err) return next(err);
