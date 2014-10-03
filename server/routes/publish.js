@@ -25,7 +25,9 @@ module.exports = function (req, res, next) {
     var username = req.query.username;
     var appId = 0;
 
-    makedrive.getFile(username, 'webmaker-app.json', function (data) {
+    makedrive.getUserJSON(username, function (err, data) {
+        if (err) return next(err);
+
         var json = data.apps[appId];
         var dir = req.query.username + '/' + json.id;
 
