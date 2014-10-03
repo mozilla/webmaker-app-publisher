@@ -1,5 +1,6 @@
 var request = require('request');
 var habitat = require('habitat');
+var errorUtil = require('./error');
 module.exports = {
     getUserJSON: function (username, callback) {
         var url = habitat.get('MAKEDRIVE_ENDPOINT_WITH_AUTH') + '/s/' + username + '/' + habitat.get('WMOBILE_FILENAME')
@@ -9,10 +10,8 @@ module.exports = {
             var json = JSON.parse(body);
 
             // Check for 404
-            if (json.error && json.error.code === 404) {
-                var err = new Error(json.error.message);
-                err.code = 404;
-                return callback(err);
+            if (json.error && json.error.code) {
+                return callback(errorUtil(json.error.code, json.error.message));
             }
 
             callback(null, json);
