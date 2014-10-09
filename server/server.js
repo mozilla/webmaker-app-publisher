@@ -9,9 +9,11 @@ module.exports = function () {
 
     // Load config
     if (environment === 'PRODUCTION') {
+        console.log('loading production config');
         habitat.load('config/production.env');
     }
     else if (environment === 'STAGING') {
+        console.log('loading staging config');
         habitat.load('config/staging.env');
     }
     habitat.load('config/defaults.env');
