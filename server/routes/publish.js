@@ -20,6 +20,7 @@ var s3 = new AWS.S3({
 var s3Util = new S3Util(s3);
 
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
+var baseDir = 'p';
 
 module.exports = function (req, res, next) {
 
@@ -40,7 +41,7 @@ module.exports = function (req, res, next) {
 
         if (!json) return next(errorUtil(404, 'App not found for id: ' + appId));
 
-        var dir = username + '/' + json.id;
+        var dir = baseDir + '/' + username + '/' + json.id;
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';
