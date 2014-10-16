@@ -27,7 +27,7 @@ middleware.cors = function cors(req, res, next) {
     }
     // intercept OPTIONS method
     if (req.method === 'OPTIONS') {
-        res.send(200);
+        res.status(200).end();
     }
     else {
         next();
