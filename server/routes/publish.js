@@ -5,19 +5,9 @@ var habitat = require('habitat');
 var AWS = require('aws-sdk');
 var async = require('async');
 
-var makedrive = require('../util/makedrive');
-var errorUtil = require('../util/error');
-var S3Util = require('../util/s3');
-
-var s3 = new AWS.S3({
-    region: habitat.get('REGION'),
-    accessKeyId: habitat.get('ACCESS_KEY_ID'),
-    secretAccessKey: habitat.get('SECRET_ACCESS_KEY'),
-    params: {
-        Bucket: habitat.get('BUCKET')
-    }
-});
-var s3Util = new S3Util(s3);
+var makedrive = require('../../lib/makedrive');
+var errorUtil = require('../../lib/error');
+var s3Util = require('../../lib/s3');
 
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
 var baseDir = 'p';
