@@ -43,7 +43,9 @@ module.exports = function (req, res, next) {
             '../src/index.js',
             '../src/common.css'
         ].map(function (filepath) {
-            return s3Util.putFile({filepath: filepath, dir: dir});
+            return function (cb) {
+                s3Util.copyPublishAssets({filepath: filepath, dir: dir}, cb);
+            };
         });
 
         // Add the json
