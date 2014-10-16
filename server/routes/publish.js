@@ -5,30 +5,24 @@ var habitat = require('habitat');
 var AWS = require('aws-sdk');
 var async = require('async');
 
-var makedrive = require('../util/makedrive');
-var errorUtil = require('../util/error');
-var S3Util = require('../util/s3');
-
-var s3 = new AWS.S3({
-    region: habitat.get('REGION'),
-    accessKeyId: habitat.get('ACCESS_KEY_ID'),
-    secretAccessKey: habitat.get('SECRET_ACCESS_KEY'),
-    params: {
-        Bucket: habitat.get('BUCKET')
-    }
-});
-var s3Util = new S3Util(s3);
+var makedrive = require('../../lib/makedrive');
+var errorUtil = require('../../lib/error');
+var s3Util = require('../../lib/s3');
 
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
 var baseDir = 'p';
 
 module.exports = function (req, res, next) {
+    var username;
+    if (habitat.get('DEV_PUBLISH')) {
+        username = req.body.username;
+    } else {
+        if (!req.session || !req.session.user) return next(errorUtil(401, 'No user session found'));
+        username = req.session.user.username;
+        if (!username) return next(errorUtil(401, 'No valid user session found'));
+    }
 
-    if (!req.session || !req.session.user) return next(errorUtil(401, 'No user session found'));
-    var username = req.session.user.username;
     var appId = req.body.id;
-
-    if (!username) return next(errorUtil(401, 'No valid user session found'));
     if (!appId) return next(errorUtil(400, 'No id in request body. See docs at ' + docsUrl));
 
     makedrive.getUserJSON(username, function (err, data) {
@@ -41,25 +35,22 @@ module.exports = function (req, res, next) {
 
         if (!json) return next(errorUtil(404, 'App not found for id: ' + appId));
 
-        var dir = baseDir + '/' + username + '/' + json.id;
+        var dir = baseDir + '/' + username + '/' + json.id + '/';
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';
 
-        // Queue up generic file uploads
-        // Todo: copy these directly from webmaker-app s3 bucket to new s3 dir
-        var queue = [
-            '../src/index.html',
-            '../src/index.js',
-            '../src/common.css'
-        ].map(function (filepath) {
-            return s3Util.putFile({filepath: filepath, dir: dir});
+        var queue = [];
+
+        // Add generic files
+        queue.push(function (callback) {
+            s3Util.copyPublishAssets(dir, callback);
         });
 
         // Add the json
         queue.push(function (callback) {
-            s3.putObject({
-                Key: dir + '/app.js',
+            s3Util.client.putObject({
+                Key: dir + 'app.js',
                 Body: appJs,
                 ContentType: 'application/javascript',
             }, callback);
