@@ -46,7 +46,7 @@ module.exports = function (req, res, next) {
             description: 'An app made with Webmaker',
             launch_path: '/index.html',
             icons: {
-                '128': app.icon
+                '128': json.icon
             },
             developer: {
                 name: username
@@ -76,7 +76,7 @@ module.exports = function (req, res, next) {
         queue.push(function (callback) {
             s3Util.client.putObject({
                 Key: dir + 'manifest.webapp',
-                Body: manifestJSON,
+                Body: JSON.stringify(manifestJSON),
                 ContentType: 'application/json',
             }, callback);
         });
