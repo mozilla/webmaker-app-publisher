@@ -22,7 +22,8 @@
     "async": "^0.9.0",
     "mime": "^1.2.11",
     "request": "^2.44.0",
-    "messina": "^0.1.2"
+    "messina": "^0.1.2",
+    "webmaker": "0.0.2"
   },
   "devDependencies": {
     "del": "^0.1.3"
