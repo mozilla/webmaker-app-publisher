@@ -16,6 +16,7 @@ var webmakerVersion = require('../../package.json').dependencies.webmaker;
 
 module.exports = function (req, res, next) {
     var username;
+
     if (habitat.get('DEV_PUBLISH')) {
         username = req.body.username;
     } else {
