@@ -8,13 +8,13 @@ module.exports = function () {
     var environment = habitat.get('NODE_ENV');
 
     // Load config
-    if (environment === 'PRODUCTION') {
-        console.log('loading production config');
-        habitat.load('config/production.env');
-    }
-    else if (environment === 'STAGING') {
+    if (environment === 'STAGING') {
         console.log('loading staging config');
         habitat.load('config/staging.env');
+    }
+    else if (environment === 'MOFODEV') {
+        console.log('loading mofodev config');
+        habitat.load('config/mofodev.env');
     }
     habitat.load('config/defaults.env');
 

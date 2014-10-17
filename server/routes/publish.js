@@ -12,6 +12,8 @@ var s3Util = require('../../lib/s3');
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
 var baseDir = 'p';
 
+var webmakerVersion = require('../../package.json').dependencies.webmaker;
+
 module.exports = function (req, res, next) {
     var username;
     if (habitat.get('DEV_PUBLISH')) {
@@ -39,6 +41,21 @@ module.exports = function (req, res, next) {
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';
+        var manifestJSON = {
+            name: json.name,
+            description: 'An app made with Webmaker',
+            launch_path: '/index.html',
+            icons: {
+                '128': app.icon
+            },
+            developer: {
+                name: username
+            },
+            default_locale: 'en-US', // TODO - set on app json
+            type: 'web',
+            fullscreen: true,
+            version: webmakerVersion
+        };
 
         var queue = [];
 
@@ -53,6 +70,14 @@ module.exports = function (req, res, next) {
                 Key: dir + 'app.js',
                 Body: appJs,
                 ContentType: 'application/javascript',
+            }, callback);
+        });
+        // Manifest
+        queue.push(function (callback) {
+            s3Util.client.putObject({
+                Key: dir + 'manifest.webapp',
+                Body: manifestJSON,
+                ContentType: 'application/json',
             }, callback);
         });
 
