@@ -7,7 +7,7 @@ middleware.errorHandler = function (err, req, res, next) {
     var code;
 
     if (err) {
-        console.error(err.stack);
+        console.error(err, err.stack);
         message = err.message || 'There was an internal server error.';
         code = +err.code || 500
     }
