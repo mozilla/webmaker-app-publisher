@@ -4,19 +4,9 @@ module.exports = function () {
     var morgan = require('morgan');
     var bodyParser = require('body-parser');
     var WebmakerAuth = require('webmaker-auth');
+    var config = require('../config');
 
-    var environment = habitat.get('NODE_ENV');
-
-    // Load config
-    if (environment === 'STAGING') {
-        console.log('loading staging config');
-        habitat.load('config/staging.env');
-    }
-    else if (environment === 'MOFODEV') {
-        console.log('loading mofodev config');
-        habitat.load('config/mofodev.env');
-    }
-    habitat.load('config/defaults.env');
+    config.load();
 
     // Auth
     var auth = new WebmakerAuth({
@@ -31,7 +21,7 @@ module.exports = function () {
     var middleware = require('./middleware');
 
     // Logs
-    var messina = require('messina')('webmaker-app-publisher-' + environment);
+    var messina = require('messina')('webmaker-app-publisher-' + process.env.NODE_ENV);
 
     if (habitat.get('ENABLE_GELF_LOGS')) {
         app.use(messina.middleware());
