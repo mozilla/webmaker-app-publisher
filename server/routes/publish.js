@@ -9,6 +9,8 @@ var makedrive = require('../../lib/makedrive');
 var errorUtil = require('../../lib/error');
 var s3Util = require('../../lib/s3');
 
+var makeapi = require('../../lib/makeapi')(habitat);
+
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
 var baseDir = 'p';
 
@@ -73,6 +75,7 @@ module.exports = function (req, res, next) {
                 ContentType: 'application/javascript',
             }, callback);
         });
+
         // Manifest
         queue.push(function (callback) {
             s3Util.client.putObject({
@@ -85,12 +88,46 @@ module.exports = function (req, res, next) {
         // Do it!
         async.parallel(queue, function (err, results) {
             if (err) return next(err);
+
             // Send the url
+            var url = habitat.get('PUBLISH_URL') + '/' + dir;
             res.send({
-                url: habitat.get('PUBLISH_URL') + '/' + dir,
+                url: url,
                 result: results
+            });
+
+            // asynchronously publish to MakeAPI
+            var makeOptions = {
+              thumbnail: json.icon,
+              contentType: "application/x-mobile",
+              title: manifestJSON.name,
+              description: manifestJSON.description,
+              author: manifestJSON.developer.name,
+              email: req.session.user.email,
+              url: url,
+              contenturl: url,
+              remixUrl: url
+            };
+
+            makeapi.search({ url: url }, function(err, results) {
+                if (err) {
+                    return console.warn("could not publish make "+url);
+                }
+
+                if (results.length === 0) {
+                    makeapi.create({ maker: makeOptions.email, make: makeOptions}, function(err, make) {
+                        if (err || !make) {
+                            console.warn("error while publishing make to the makeapi");
+                            console.warn(err);
+                            return;
+                        }
+                    });
+                }
             });
         });
     });
 
 };
+
+
+
