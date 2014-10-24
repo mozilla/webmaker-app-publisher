@@ -45,7 +45,7 @@ module.exports = function (req, res, next) {
         var manifestJSON = {
             name: json.name,
             description: 'An app made with Webmaker',
-            launch_path: './index.html',
+            launch_path: habitat.get('PUBLISH_URL') + '/' + dir + 'index.html',
             icons: {
                 '128': json.icon
             },
