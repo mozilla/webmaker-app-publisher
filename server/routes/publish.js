@@ -16,7 +16,7 @@ var webmakerVersion = require('../../package.json').dependencies.webmaker;
 
 module.exports = function (req, res, next) {
 
-    console.log('WARNING: DEPRECEATED ROUTE');
+    console.log('WARNING: DEPRECATED ROUTE');
 
     var username;
 
