@@ -4,44 +4,44 @@
 var habitat = require('habitat');
 var AWS = require('aws-sdk');
 var async = require('async');
+var Firebase = require('firebase');
 
-var makedrive = require('../../lib/makedrive');
 var errorUtil = require('../../lib/error');
 var s3Util = require('../../lib/s3');
 
 var docsUrl = 'https://github.com/mozillafordevelopment/webmaker-app-publisher';
-var baseDir = 'p';
 
 var webmakerVersion = require('../../package.json').dependencies.webmaker;
 
+if (!habitat.get('FIREBASE_ENDPOINT')) throw new Error('You must configure FIREBASE_ENDPOINT in .env');
+
+var firebase = new Firebase(habitat.get('FIREBASE_ENDPOINT') + '/apps');
+
 module.exports = function (req, res, next) {
+    var user = req.session && req.session.user;
 
-    console.log('WARNING: DEPRECATED ROUTE');
-
-    var username;
-
+    // Check auth
     if (habitat.get('DEV_PUBLISH')) {
-        username = req.body.username;
+        console.log('Using DEV publish strategy.');
+        user = req.body.user;
     } else {
-        if (!req.session || !req.session.user) return next(errorUtil(401, 'No user session found'));
-        username = req.session.user.username;
-        if (!username) return next(errorUtil(401, 'No valid user session found'));
+        if (!user) return next(errorUtil(401, 'No user session found'));
+        if (!user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
     }
 
+    // Check id
     var appId = req.body.id;
     if (!appId) return next(errorUtil(400, 'No id in request body. See docs at ' + docsUrl));
 
-    makedrive.getUserJSON(username, function (err, data) {
-        if (err) return next(err);
+    // Fetch
+    var ref = firebase.child(appId);
+    ref.once('value', function (snapshot) {
+        var json = snapshot.val();
+        var id = snapshot.key();
 
-        var json;
-        for (var i in data.apps) {
-            if (data.apps[i].id === appId) json = data.apps[i];
-        }
+        if (!json) return next(errorUtil(400, 'App does not exist.'));
 
-        if (!json) return next(errorUtil(404, 'App not found for id: ' + appId));
-
-        var dir = baseDir + '/' + username + '/' + json.id + '/';
+        var dir = baseDir + '/' + user.username + '/' + id + '/';
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';
@@ -53,7 +53,7 @@ module.exports = function (req, res, next) {
                 '128': json.icon
             },
             developer: {
-                name: username
+                name: user.username
             },
             default_locale: 'en-US', // TODO - set on app json
             type: 'web',
