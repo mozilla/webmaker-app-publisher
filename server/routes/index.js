@@ -5,7 +5,7 @@ module.exports = function (auth) {
     var router = express.Router();
 
     router.get('/healthcheck', require('./healthcheck'));
-    router.get('/publish/webmaker-app', require('./webmaker-app'));
+    router.post('/publish/webmaker-app', require('./webmaker-app'));
 
     // DEPRECATED
     router.post('/publish', middleware.cors, require('./publish'));
