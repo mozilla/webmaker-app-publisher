@@ -19,6 +19,7 @@ var firebase = new Firebase(habitat.get('FIREBASE_ENDPOINT') + '/apps');
 
 module.exports = function (req, res, next) {
     var user = req.session && req.session.user;
+    var baseDir = 'p';
 
     // Check auth
     if (habitat.get('DEV_PUBLISH')) {
