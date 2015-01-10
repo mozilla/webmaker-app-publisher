@@ -23,7 +23,8 @@ module.exports = function () {
       loginURL: habitat.get('LOGIN_URL'),
       secretKey: habitat.get('SECRET_KEY'),
       domain: habitat.get('COOKIE_DOMAIN'),
-      forceSSL: habitat.get('FORCE_SSL')
+      forceSSL: habitat.get('FORCE_SSL'),
+      loginHost: 'do not need'
     });
 
     var app = express();
