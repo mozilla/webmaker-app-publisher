@@ -4,8 +4,6 @@ if (process.env.NEW_RELIC_HOME) {
 
 var habitat = require('habitat');
 
-// Load local environment
-habitat.load('.env');
 var server = require('./server')();
 
 // Run server
