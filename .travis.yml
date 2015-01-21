@@ -4,13 +4,23 @@ node_js:
 before_deploy:
 - npm run build
 deploy:
-  provider: s3
+- provider: s3
   skip_cleanup: true
-  access_key_id: AKIAJ34HS66AADLVVKGA
+  access_key_id: AKIAIETGTD6XKCBYHGJA
   secret_access_key:
-    secure: WgM3OfmSIXKJPGLY7ixNxn5Abz6JiAMtKsPCykRNwLRtZsyZ6gnWDbMog703q8ULwxrR9eaq34q0bGfHhZLTOQfdG21YYWOG3AkdJNhq9Jgf4YVAhs7GILtvhrJmZtWSnIf6wzTOtEsCUfXE9IWdz0sahrenqXviugOWi/d+7Jw=
+    secure: "R4zYNE/Jfy4SADIumBj43XYIZ0eS/dn1mbKMmtz/OP20Z24vJ1laovxTvD0zl8lLstE8VGUIDlm4I49dK+z47oJ+CR51am9Zeu8etioxL27jMPE3jOK8Ota7+VknfqRtBl9hUMhMPCEohnKy8LdyfHL97ZtSEvhGWZQEAqCnSvQ="
   bucket: webmaker-app-publisher-staging
   local-dir: assets
   on:
     branch: master
-    repo: mozillafordevelopment/webmaker-app-publisher
+    repo: mozilla/webmaker-app-publisher
+- provider: s3
+  skip_cleanup: true
+  access_key_id: AKIAIS5Q7XHEIDVY7BPQ
+  secret_access_key:
+    secure: "kaVii9qUyRA0fz6dMmBJ78XhjzAbV68pbabKBv9LznrZjwrx+UHR2O3CHiy8pH+Cpan/yNSabTqIg3t6amcXkngoLfa7m/3QUDhSKzFs2GZa1Jf6TywJ+de59RGwWrh8Z7aQjiGJiWnx9xVIaefkua6CDKLfvTTrdqYaklyDYdM="
+  bucket: webmaker-publisher-staging
+  local-dir: assets
+  on:
+    branch: master
+    repo: mozilla/webmaker-app-publisher
