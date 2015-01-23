@@ -7,9 +7,6 @@ module.exports = function (auth) {
     router.get('/healthcheck', require('./healthcheck'));
     router.post('/publish/webmaker-app', middleware.cors, require('./webmaker-app'));
 
-    // DEPRECATED
-    router.post('/publish', middleware.cors, require('./publish'));
-
     router.options('*', middleware.cors);
 
     return router;
