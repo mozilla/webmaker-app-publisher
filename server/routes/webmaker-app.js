@@ -62,7 +62,7 @@ module.exports = function (req, res, next) {
         };
 
         // fake a response if we're doing dev-publish
-        if (env.get('FAKE_S3')) {
+        if (habitat.get('FAKE_S3')) {
             console.log('Not actually publishing to s3 ;)');
 
             // Send the url
