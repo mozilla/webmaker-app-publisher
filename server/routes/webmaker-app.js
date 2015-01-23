@@ -22,8 +22,7 @@ module.exports = function (req, res, next) {
     var baseDir = 'p';
 
     // Check auth
-    if (habitat.get('DEV_PUBLISH')) {
-        console.log('Using DEV publish strategy.');
+    if (habitat.get('FAKE_AUTH')) {
         user = req.body.user;
     } else {
         if (!user) return next(errorUtil(401, 'No user session found'));
@@ -61,6 +60,17 @@ module.exports = function (req, res, next) {
             fullscreen: true,
             version: webmakerVersion
         };
+
+        // fake a response if we're doing dev-publish
+        if (env.get('FAKE_S3')) {
+            console.log('Not actually publishing to s3 ;)');
+
+            // Send the url
+            res.send({
+                url: habitat.get('PUBLISH_URL') + '/' + dir
+            });
+            return;
+        }
 
         var queue = [];
 
