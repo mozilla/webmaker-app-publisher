@@ -4,6 +4,7 @@ node_js:
 before_deploy:
 - npm run build
 deploy:
+# webmaker-app-publisher.mofodev.net
 - provider: s3
   skip_cleanup: true
   access_key_id: AKIAJMJ4R6KFKGVDH74A
@@ -14,6 +15,7 @@ deploy:
   on:
     branch: master
     repo: mozilla/webmaker-app-publisher
+# webmaker-publisher.mofostaging.net
 - provider: s3
   skip_cleanup: true
   access_key_id: AKIAIS5Q7XHEIDVY7BPQ
