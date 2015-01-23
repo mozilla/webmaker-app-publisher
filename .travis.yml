@@ -6,9 +6,9 @@ before_deploy:
 deploy:
 - provider: s3
   skip_cleanup: true
-  access_key_id: AKIAIETGTD6XKCBYHGJA
+  access_key_id: AKIAJMJ4R6KFKGVDH74A
   secret_access_key:
-    secure: "R4zYNE/Jfy4SADIumBj43XYIZ0eS/dn1mbKMmtz/OP20Z24vJ1laovxTvD0zl8lLstE8VGUIDlm4I49dK+z47oJ+CR51am9Zeu8etioxL27jMPE3jOK8Ota7+VknfqRtBl9hUMhMPCEohnKy8LdyfHL97ZtSEvhGWZQEAqCnSvQ="
+    secure: fn+eO5hoSdsLLAjOtPQmTzZ07LufjcT6bbMXmSne0jxLqsht9Z/xUjTF+WVCP0Y4W/ON2+qQ0xs+fGOqjj7sWYnvZ+JOvYR0HDKl0UTuzMcWInqx72w+8HEoEax1Burg++a+t/y2PVvz8cGs0Y65N0FRCwbG8AA6iBt5f7r8wq4=
   bucket: webmaker-app-publisher-staging
   local-dir: assets
   on:
