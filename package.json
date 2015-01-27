@@ -24,7 +24,8 @@
     "request": "^2.44.0",
     "messina": "^0.1.2",
     "webmaker": "0.0.14",
-    "firebase": "^2.0.4"
+    "firebase": "^2.0.4",
+    "request": "2.51.0"
   },
   "devDependencies": {
     "del": "^0.1.3"
