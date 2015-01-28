@@ -5,6 +5,7 @@ var habitat = require('habitat');
 var AWS = require('aws-sdk');
 var async = require('async');
 var Firebase = require('firebase');
+var request = require('request');
 
 var errorUtil = require('../../lib/error');
 var s3Util = require('../../lib/s3');
@@ -16,10 +17,30 @@ var webmakerVersion = require('../../package.json').dependencies.webmaker;
 if (!habitat.get('FIREBASE_ENDPOINT')) throw new Error('You must configure FIREBASE_ENDPOINT in .env');
 
 var firebase = new Firebase(habitat.get('FIREBASE_ENDPOINT') + '/apps');
+var BOT_ENDPOINT = habitat.get('BOT_ENDPOINT');
 
 module.exports = function (req, res, next) {
     var user = req.session && req.session.user;
     var baseDir = 'p';
+
+    function tellIRC (evt, data) {
+      if (!BOT_ENDPOINT) {
+        return;
+      }
+
+      request.post(
+          BOT_ENDPOINT,
+          {
+            json: data
+          },
+          function (error, response, body) {
+            if (error) {
+              console.warn("Could not notify IRC bot!");
+              console.warn(error);
+            }
+          }
+      );
+    };
 
     // Check auth
     if (habitat.get('FAKE_AUTH')) {
@@ -69,6 +90,9 @@ module.exports = function (req, res, next) {
             res.send({
                 url: habitat.get('PUBLISH_URL') + '/' + dir
             });
+
+            tellIRC('publish', json);
+
             return;
         }
 
@@ -105,6 +129,8 @@ module.exports = function (req, res, next) {
                 url: habitat.get('PUBLISH_URL') + '/' + dir,
                 result: results
             });
+
+            tellIRC('publish', json);
         });
     });
 
