@@ -15,7 +15,7 @@ module.exports = function (req, res, next) {
         if (!user) return next(errorUtil(401, 'No user session found'));
         if (!user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
     }
-console.log(user);
+
     var policy = policy_gen({
         id: habitat.get('ACCESS_KEY_ID'),
         key: habitat.get('SECRET_ACCESS_KEY'),
