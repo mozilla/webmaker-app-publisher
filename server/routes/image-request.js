@@ -6,15 +6,7 @@ var uuid_gen = require('node-uuid');
 var baseDir = 'i';
 
 module.exports = function (req, res, next) {
-    var user = req.session && req.session.user;
-
-    // Check auth
-    if (habitat.get('FAKE_AUTH')) {
-        user = req.body.user;
-    } else {
-        if (!user) return next(errorUtil(401, 'No user session found'));
-        if (!user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
-    }
+    var user = req.user;
 
     var policy = policy_gen({
         id: habitat.get('ACCESS_KEY_ID'),

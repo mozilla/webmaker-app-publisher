@@ -1,6 +1,24 @@
 var habitat = require('habitat');
 var middleware = {};
 
+// For Webmaker Auth
+middleware.authenticateWithCookie = function (req, res, next) {
+    var user = req.session && req.session.user;
+
+    // Check auth
+    if (user) return next(errorUtil(401, 'No user session found'));
+    if (user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
+
+    req.user = user;
+    next();
+};
+
+middleware.anonymousAuth = function (req, res, next) {
+    if (!req.body.user) return next(errorUtil(401, 'No user object was sent. You may need to rebase your webmaker-app code to v0.0.18'));
+    req.user = req.body.user;
+    next();
+};
+
 // Generic error handler.
 middleware.errorHandler = function (err, req, res, next) {
     var message;
