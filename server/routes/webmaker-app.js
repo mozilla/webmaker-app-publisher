@@ -20,7 +20,7 @@ var firebase = new Firebase(habitat.get('FIREBASE_ENDPOINT') + '/apps');
 var BOT_ENDPOINT = habitat.get('BOT_ENDPOINT');
 
 module.exports = function (req, res, next) {
-    var user = req.session && req.session.user;
+    var user = req.user;
     var baseDir = 'p';
 
     function tellIRC (evt, data) {
@@ -42,27 +42,20 @@ module.exports = function (req, res, next) {
       );
     };
 
-    // Check auth
-    if (habitat.get('FAKE_AUTH')) {
-        user = req.body.user;
-    } else {
-        if (!user) return next(errorUtil(401, 'No user session found'));
-        if (!user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
-    }
-
     // Check id
     var appId = req.body.id;
     if (!appId) return next(errorUtil(400, 'No id in request body. See docs at ' + docsUrl));
 
     // Fetch
     var ref = firebase.child(appId);
+
     ref.once('value', function (snapshot) {
         var json = snapshot.val();
         var id = snapshot.key();
 
         if (!json) return next(errorUtil(400, 'App does not exist.'));
 
-        var dir = baseDir + '/' + user.username + '/' + id + '/';
+        var dir = baseDir + '/' + id + '/';
 
         // Convert json to js to write to file
         var appJs = 'window.App=' + JSON.stringify(json) + ';';
@@ -74,6 +67,7 @@ module.exports = function (req, res, next) {
                 '128': json.icon
             },
             developer: {
+                id: user.id,
                 name: user.username
             },
             default_locale: 'en-US', // TODO - set on app json
