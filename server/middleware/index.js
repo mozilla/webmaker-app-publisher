@@ -6,19 +6,15 @@ middleware.authenticateWithCookie = function (req, res, next) {
     var user = req.session && req.session.user;
 
     // Check auth
-    if (habitat.get('FAKE_AUTH')) {
-        user = req.body.user;
-    } else {
-        if (user) return next(errorUtil(401, 'No user session found'));
-        if (user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
-    }
+    if (user) return next(errorUtil(401, 'No user session found'));
+    if (user.id || !user.username) return next(errorUtil(401, 'No valid user session found'));
 
     req.user = user;
     next();
 };
 
 middleware.anonymousAuth = function (req, res, next) {
-    if (!req.body.user) return next(errorUtil(401, 'No user object was sent. You should include this in the body of the request'));
+    if (!req.body.user) return next(errorUtil(401, 'No user object was sent. You may need to rebase your webmaker-app code to v0.0.18'));
     req.user = req.body.user;
     next();
 };
