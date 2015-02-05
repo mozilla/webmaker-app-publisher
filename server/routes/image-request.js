@@ -10,7 +10,7 @@ module.exports = function (req, res, next) {
 
     var policy = policy_gen({
         id: habitat.get('ACCESS_KEY_ID'),
-        key: habitat.get('SECRET_ACCESS_KEY'),
+        secret: habitat.get('SECRET_ACCESS_KEY'),
         date: Date.now(),
         region: habitat.get('REGION'),
         bucket: habitat.get('BUCKET'),
