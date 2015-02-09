@@ -1,4 +1,3 @@
-var errorUtil = require('../../lib/error');
 var habitat = require('habitat');
 var policy_gen = require('s3-post-policy');
 var uuid_gen = require('node-uuid');

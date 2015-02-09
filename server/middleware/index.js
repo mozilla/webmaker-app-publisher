@@ -1,3 +1,4 @@
+var errorUtil = require('../../lib/error');
 var habitat = require('habitat');
 var middleware = {};
 
