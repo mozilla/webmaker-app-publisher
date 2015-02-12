@@ -64,15 +64,13 @@ module.exports = function (req, res, next) {
             description: 'An app made with Webmaker',
             launch_path: '/' + dir + 'index.html',
             icons: {
-                '128': json.icon
+                '128': '/' + json.icon
             },
             developer: {
-                id: user.id,
-                name: user.username
+                name: user.username || 'Anonymous'
             },
             default_locale: 'en-US', // TODO - set on app json
             type: 'web',
-            fullscreen: true,
             version: webmakerVersion
         };
 
