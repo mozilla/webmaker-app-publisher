@@ -25,7 +25,7 @@
     "node-uuid": "^1.4.2",
     "request": "2.51.0",
     "s3-post-policy": "^2.0.0",
-    "webmaker": "0.0.21",
+    "webmaker": "0.0.22",
     "webmaker-auth": "1.0.2"
   },
   "devDependencies": {
