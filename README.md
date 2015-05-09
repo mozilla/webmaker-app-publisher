@@ -1,3 +1,7 @@
+## Deprecated. Please see https://github.com/mozilla/webmaker-android for more information.
+
+---
+
 # webmaker-app-publisher
 
 ## Issue tracking
